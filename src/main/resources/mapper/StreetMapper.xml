@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.yandex.mapper.StreetMapper">
+    <resultMap id="streetResult" type="street">
+        <id column="street_id" property="id"/>
+        <result column="street_name" property="name"/>
+        <association property="city" resultMap="org.yandex.mapper.CityMapper.cityResult"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="streetResult">
+        select st.id as street_id, st.name as street_name,
+               ci.id as city_id, ci.name as city_name,
+               co.id as country_id, co.name as country_name
+        from street st left join city ci on ci.id = st.city_id left join country co on co.id = ci.country_id
+    </select>
+
+    <select id="findAllByCityAndCountry" resultMap="streetResult">
+        select st.id as street_id, st.name as street_name,
+        ci.id as city_id, ci.name as city_name,
+        co.id as country_id, co.name as country_name
+        from street st left join city ci on ci.id = st.city_id left join country co on co.id = ci.country_id
+        <where>
+            <if test="city != null">
+                city_id = #{city.id}
+            </if>
+            <if test="country != null">
+                and co.id = #{country.id}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultMap="streetResult">
+        select st.id as street_id, st.name as street_name,
+               ci.id as city_id, ci.name as city_name,
+               co.id as country_id, co.name as country_name
+        from street st left join city ci on ci.id = st.city_id left join country co on co.id = ci.country_id
+        where st.id = #{id}
+    </select>
+
+    <select id="findByName" resultMap="streetResult">
+        select st.id as street_id, st.name as street_name,
+               ci.id as city_id, ci.name as city_name,
+               co.id as country_id, co.name as country_name
+        from street st left join city ci on ci.id = st.city_id left join country co on co.id = ci.country_id
+        where st.name = #{name}
+    </select>
+
+    <insert id="save" parameterType="street">
+        insert into street(id, name, city_id) values (nextval('mysequence'), #{name}, #{city.id})
+    </insert>
+
+    <update id="update" parameterType="street">
+        update street
+        set name = #{name}, city_id = #{city.id}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="street">
+        delete from street WHERE id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd"
+  logicalFilePath="db/changelog/0000100_init.xml">
+
+  <changeSet author="elyukshin" id="COUNTRY_CREATE_TABLE">
+    <createTable tableName="COUNTRY">
+      <column name="id" remarks="Идентификатор" type="NUMBER(19, 0)">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="name" type="VARCHAR(255)">
+        <constraints unique="true"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="elyukshin" id="CITY_CREATE_TABLE">
+    <createTable tableName="CITY">
+      <column name="id" remarks="Идентификатор" type="NUMBER(19, 0)">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="name" type="VARCHAR(255)">
+        <constraints unique="true"/>
+      </column>
+      <column name="country_id" type="NUMBER(19, 0)">
+        <constraints foreignKeyName="country_id" references="country(id)" deleteCascade="true"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="elyukshin" id="STREET_CREATE_TABLE">
+    <createTable tableName="STREET">
+      <column name="id" remarks="Идентификатор" type="NUMBER(19, 0)">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="name" type="VARCHAR(255)">
+        <constraints unique="true"/>
+      </column>
+      <column name="city_id" type="NUMBER(19, 0)">
+        <constraints foreignKeyName="city_id" references="city(id)" deleteCascade="true"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+
+  <changeSet id="local example data country" author="elyukshin" runOnChange="true">
+    <loadUpdateData tableName="COUNTRY" primaryKey="ID" file="db/data/COUNTRY.csv">
+      <column header="ID" name="ID" type="NUMBER(19, 0)"/>
+      <column header="COMMENT" name="COMMENT" type="STRING"/>
+    </loadUpdateData>
+  </changeSet>
+
+  <changeSet id="local example data city" author="elyukshin" runOnChange="true">
+    <loadUpdateData tableName="CITY" primaryKey="ID" file="db/data/CITY.csv">
+      <column header="ID" name="ID" type="NUMBER(19, 0)"/>
+      <column header="NAME" name="NAME" type="STRING"/>
+      <column header="COUNTRY_ID" name="COUNTRY_ID" type="NUMBER(19, 0)"/>
+    </loadUpdateData>
+  </changeSet>
+
+  <changeSet id="local example data street" author="elyukshin" runOnChange="true">
+    <loadUpdateData tableName="STREET" primaryKey="ID" file="db/data/STREET.csv">
+      <column header="ID" name="ID" type="NUMBER(19, 0)"/>
+      <column header="NAME" name="NAME" type="STRING"/>
+      <column header="CITY_ID" name="CITY_ID" type="NUMBER(19, 0)"/>
+    </loadUpdateData>
+  </changeSet>
+
+  <changeSet id="create sequence" author="elyukshin">
+    <createSequence sequenceName="mysequence" incrementBy="1" startValue="100"/>
+  </changeSet>
+
+
+
+</databaseChangeLog>

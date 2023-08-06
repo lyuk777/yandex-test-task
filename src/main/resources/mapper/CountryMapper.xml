@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.yandex.mapper.CountryMapper">
+    <resultMap id="countryResult" type="country">
+        <id column="country_id" property="id"/>
+        <result column="country_name" property="name"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="countryResult">
+        select id as country_id, name as country_name
+        from country
+    </select>
+
+    <select id="findById" resultMap="countryResult" parameterType="long">
+        select id as country_id, name as country_name
+        from country where id = #{id}
+    </select>
+
+    <select id="findByName" resultMap="countryResult" parameterType="string">
+        select id as country_id, name as country_name
+        from country where name = #{name}
+    </select>
+
+    <insert id="save" parameterType="country" >
+        insert into country(id, name) values (nextval('mysequence'), #{name})
+    </insert>
+
+    <update id="update" parameterType="country">
+        update country set name = #{name} WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="country">
+        delete from country WHERE id = #{id}
+    </delete>
+
+</mapper>

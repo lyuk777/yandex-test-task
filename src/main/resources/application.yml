@@ -1,0 +1,12 @@
+spring:
+  liquibase:
+    change-log: classpath:/db/db.changelog-master.xml
+    drop-first: true
+  datasource:
+    name: primaryDS
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+mybatis:
+  config-location: classpath:mybatis-config.xml

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.yandex.mapper.CityMapper">
+    <resultMap id="cityResult" type="city">
+        <id column="city_id" property="id" />
+        <result column="city_name" property="name" />
+        <association property="country" resultMap="org.yandex.mapper.CountryMapper.countryResult" />
+    </resultMap>
+
+    <select id="findAll" resultMap="cityResult">
+        select ci.id as city_id, ci.name as city_name,
+               co.id as country_id, co.name as country_name
+        from city ci left join country co on co.id = ci.country_id
+    </select>
+
+    <select id="findById" resultMap="cityResult" parameterType="long">
+        select ci.id as city_id, ci.name as city_name,
+               co.id as country_id, co.name as country_name
+        from city ci left join country co on co.id = ci.country_id
+        where ci.id = #{id}
+    </select>
+
+    <select id="findByName" resultMap="cityResult" parameterType="string">
+        select ci.id as city_id, ci.name as city_name,
+               co.id as country_id, co.name as country_name
+        from city ci left join country co on co.id = ci.country_id
+        where ci.name = #{name}
+    </select>
+
+    <insert id="save" parameterType="city">
+        insert into city(id, name, country_id) values (nextval('mysequence'), #{name}, #{country.id})
+    </insert>
+
+    <update id="update" parameterType="city">
+        update city
+        set name = #{name}, country_id = #{country.id}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="city">
+        delete from city WHERE id = #{id}
+    </delete>
+</mapper>
